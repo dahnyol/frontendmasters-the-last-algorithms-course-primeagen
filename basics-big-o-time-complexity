@@ -1,0 +1,121 @@
+What data structure is used here?
+ const a = []; // first guess, an array? *no it is not*
+
+Arrays are the simpliest data structure.
+
+What is Big O?
+ It categorizes your algorithm on time or memory based on input.  It not an exact measurement. 
+ Generalized way to be able to understand how your algorithm will react as your input or things you are using grow.
+Why?
+ It helps make decisions about what data structures and algorithms to use. Knowing how they will perform will help create the possible practice/program.
+ If picked well, optimal data stuctures will improve performance, if picked poorly, it will inhibit performance.
+
+Small example:
+ function sum_char_codes(n: string): number {
+    let sum = 0;
+    for (let i = 0; i < n.length; ++i) {
+        sum += n.charCodeAt(i)
+    }
+    return sum
+ }
+// how would you describe the runtime of this code?
+// answer: sum_char_codes has a Big O of linear O(n) 
+
+// if our string input n was to grow by 50%, our function is slower by 50%.
+// for every extra unit of string, we must do one more loop.
+// Look for loops! To get an idea of what Big O a function may be.
+
+// If we add one loop, what is the time complexity?
+ function sum_char_codes(n: string): number {
+    let sum = 0;
+    for (let i = 0; i < n.length; ++i) {
+        sum += n.charCodeAt(i)
+    }
+    for (let i = 0; i < n.length; ++i) {
+        sum += n.charCodeAt(i)
+    }
+    return sum
+ }
+// it is still O(n)
+
+
+Important concepts:
+
+- Big O in other terms, as your input grows, how fast does  computation or memory grow?
+
+1. Growth is with respect to the input
+    - In the real world, memory is growing is not computationally free, but in thinking about algorithms we don't think about that.
+ *Fundamentally, we can't trade time for memory (space), because it takes time to create memory, it is bound by how much memory you create.*
+
+2. Constants are dropped. O(2N) -> O(N)
+   
+    N = 1, O(10N) = 10,         O(N^2) = 1
+    N = 5, O(10N) = 50,         O(N^2) = 25
+    N = 100, O(10N) = 1000,     O(N^2) = 10,000 
+    N = 1000, O(10N) = 10,000,  O(N^2) = 1,000,000 
+    N = 10000, O(10N) = 100,000 O(N^2) = 100,000,000  
+
+// if we include constants, we go from 10 to 100,000 operations
+// for a quadratic O(N^2), we go from 1 to 100,000,000 operations, 1000x bigger! so constants are not very important when considering upper boundaries when considering theory and not exact runtimes. 
+
+Practical vs Theoretical differences:
+- Just because N is faster than N^2, deosn't mean practically its always faster for smaller input.
+- Remember, we drop constants, therefore O(100N) is faster than O(N^2), but practially speaking, you would probably win for some small set of input. If the dataset was so small the constant begins to make a real impact. 
+
+// we return sum when we encounter a capital E, what is the Big O?
+ function sum_char_codes(n: string): number {
+    let sum = 0;
+    for (let i = 0; i < n.length; ++i) {
+        const charCode = n.charCodeAt(i);
+        // Capital E
+        if (charCode === 69) {
+            return sum;
+        }
+        sum += charCode;
+    }
+    return sum;
+ }
+// although we may exit early, still O(N), because we consider worst case for Big O, which is the capital E being the last element, meaning we must iterate through the entire array.
+
+3. Worst case is usually the way we measure.
+
+
+O(N^2) -- count the loops!
+ function sum_char_codes(n: string): number {
+    let sum = 0;
+    for (let i = 0; i < n.length; ++i) {
+        for (let j = 0; j < n.length; ++j) {
+        sum += charCode;
+        }
+    }
+    return sum;
+ }
+
+O(N^3) -- count the loops!
+ function sum_char_codes(n: string): number {
+    let sum = 0;
+    for (let i = 0; i < n.length; ++i) {
+        for (let j = 0; j < n.length; ++j) {
+            for(let k = 0; k < n.length; ++k) {
+                sum += charCode;
+            }
+        }
+    }
+    return sum;
+ }
+
+O(n log n)
+ Quicksort - half the amount of space you need to search, but you need to search once for every time.
+
+O(log n)
+ Binary Search Trees 
+
+Personal favorites of prof: ring buffer / quicksort
+
+Strings are effectively arrays.
+
+Recommended Literature/Resources: 
+ Introduction to Algorithms - heavy academic reading
+ For Programmers Who Don't Know How To DataStructure And Would Like to Do Other Things Well Too - beginner friendly
+
+*you can't create a map or an array in a traditional sense (as in other languages) in pure javascript, as everything is an object*
