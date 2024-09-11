@@ -1,0 +1,172 @@
+Arrays
+const a = [] // not an array, what is it?
+
+An array is a contiguous memory space. (contiguous meaning unbreaking memory space in which contains a certain amount of bytes)
+
+Bit: is a binary unit, so either 0 or 1, on/off, yes/no, true/false
+Byte: refers to a group of 8 bits, forming 256 possible meanings in the form of letters, punctuation, special characters, etc.
+
+History of Bits and Bytes:
+
+    // We use bits, a binary unit being 1 or 0 in computing as it is easily represented by a high or low voltage. A byte is 8 bits.
+    // Bytes are a unit of memory, to find something in memory, it has to have an address. These addresses themselves are stored as bits, which means memory locations (and the spaces between them) are going to have to be powers of 2. (2,4,8,16,32,64) 
+    // 8 Bits, a byte, is a perfect size for memory as it is big enough for practical use and be an efficient use without being wasteful.
+    // In the past, byte did not mean 8 bits only, there were 6 bit, 9 bit, etc.
+    // In the 70s, Intel 8080 popularized the 8-bit processor. This made the 8-bit the standard moving forward as everyone adopted it.
+    // Later on, we have the 16-bit processor, which is chosen because it is a multiple of 8 and makes it backward compatible with all the 8-bit data. Data is still handled in 8-bit byte, and is the official standard of ISO/IEC
+
+
+Details on the basics of memory:
+
+    Everything about a computer is just numbers. Ones and Zeroes. How memory is interpreted is based on what you tell the compiler on how to interpret it. The compiler will see a chunk of memory, and say 'these four bytes, I'm going to treat as a singular number'.
+    'These four bytes is going to be a 32 bit number' is what the compiler is telling the program on how to interpret/understand it as a piece of memory in a very specific way.
+    
+    An array is essentially a big/long version of this.
+    You have zero or more pieces of memory that are understood as a single type in a row (contiguous, all in one piece, unbreaking).
+
+    Consider we have a = int[3]
+    to access we say a[0]
+    
+    This is telling the computer, go to memory address of a, then add in the offset of zero multiplied by how big my type is. 
+    a8[2] = 2 off set of zero, index 2 * 8 width of type using Uint8Array
+
+    If your type is 32 bits or four bytes, index one has to be four bytes into the array or into the memory space. This is what creates an actual array.
+
+    On the surface, an array is like a slot, but under the hood to access these big long pieces of memory, it is contiguous zeroes and ones, and something has to understand that make it into the type you think it is.
+
+// Let's create an 8 bit unit buffer and walk through it one bit at a time.
+
+const a = newArrayBuffer(6); // returns undefined
+a                            // returns ArrayBuffer { [Uint8Contents]: <00 00 00 00 00 00>, byteLength: 6 }
+const a8 = new Uint8Array(a) // returns undefined
+a8[0] = 45                   // returns 45
+a                            // returns ArrayBuffer { [Uint8Contents]: <2d 00 00 00 00 00>, byteLength: 6 }
+a8[2] = 45                   // returns ArrayBuffer { [Uint8Contents]: <2d 00 2d 00 00 00>, byteLength: 6 }
+
+// we create an ArrayBuffer with a length passed in -> newArrayBuffer(6)
+// to create the eight bit array to view into the data of newArrayBuffer(6)
+// we can see inside that created ArrayBuffer it is filled with zeroes -> [Uint8Contents]: <00 00 00 00 00 00>
+// we want to interpret these zeros in a specific way -> const a8 = new Uint8Array
+// we take them in as unsigned eight bit numbers, so we pass in a number between 0 and 255 -> a8[0] = 45
+// we have changed pieces of data in Uint8Contents, the first byte at index 0 has changed from 00 to 2d
+// we skip the byte at index 1, we target the byte at index 2 -> a8[2] = 45
+// log a, the byte index 2 has changed from 00 to 2d
+
+// create a new array with 16 unsigned bit numbers, and pass in our ArrayBuffer(6).
+const a16 = new Uint16Array(a) // returns undefined
+a                              // returns { [Uint8Contents]: <2d 00 2d 00 00 00>, byteLength: 6 }
+a16[2] = 0x4545                // returns 17733
+a                              // returns { [Uint8Contents]: <2d 00 2d 00 45 45>, byteLength: 6 }
+
+// assign a16 to a new unit array 16, we pass in our a, Uint8Array
+// we use the width on the Uint16Array
+// in the first assignment, using a decimal 45 to assign, returns 2d in its place in memory
+// in the second assignment, using hexadecimal 0x4545 to assign, returns 45 45 being set at the 5th and 6th byte, at index 4 and index 5.
+
+What did we do?
+// We took this contiguous memory space, and interpreted it in two different ways.
+ First, we said look at this eight bit units, and I can walk them in 8 bit units.
+ Second, we said look at this in sixteen bit units, and I can walk them 16 bits at a time.
+
+
+Breakdown/Summary:
+- An array buffer is a contiguous piece of memory you can create in JavaScript.
+- We create an 8 bit array to view into this data.
+- Every single time we increase the offset, it's going to take the width of that type, which is 8 bits, multiplied by the     offset that we give it, and edit/get that value .
+    So when we say, set position 0, it goes okay, I'm at array buffer A.
+    I'm going to go offset times 8 and grab that piece of memory.
+- We do it again with index 2, a8[2].
+    Okay, I'm going to go over that amount 16 bits. We are effectively grabbin the 17, 18, 19, 20 bit, or the 16,17,18,19,20,21,22,23
+- But then we create the exact same piece of memory a, but this time set it as a 16 bit. 
+    Storing two different values in the same value in the computer is called endianness, which results why assigning a8[2] = 45 being 2d and re-assigning a16[2] = 0x4545 puts 45 on the 5th and 6th byte.
+
+
+Operations we can do:
+
+    Getting data at specific index - 
+        It takes the width of the type, multiplies it by the offset, puts it at the memory address go in and grab that.
+
+    Insertion at specific index -
+        It overwrites it and sets the value. (We cannot grow an array, or we would have to cconstantly reallocate).
+        example: go to address a, add in the width of the type (usually specified in bytes, so a 32bit integer would be 4 bytes) multiplied by the offset.
+        a + width * offset 
+    
+    Deletion at specific index -
+        Similar process to insertion.
+        Set/overwrite the value to zero (we can't delete or grow contiguous memory).
+        Null may be used as a way of a zeroth value, as a way of saying there is not something at this spot.
+        a + width * offset 
+ 
+ Our big O is constant O(1) for all get, insert and delete 
+    we don't have to walk our array to the position to get insert or delete
+    we have the width type, with have the offset, we multiply them and go to that address and read out the value (or insert).
+
+
+-Arrays are a fixed size, contiguous memory chunks
+-We cannot grow it
+-There is no 'insertAt' or push or pop. Doesn't mean you cant' write those though, we can implement a way of growing, we can implement popping and pushing inside of our algorithms.
+
+
+Q&A
+Q: an array has no push or pop?
+A:  In a traditional sense, an array has no methods on it, on older languages there is no .length. 
+    Instead, the length is passed as well as the pointer to the beginning of the array and just declare/initialize - here's my type, here is where it starts, here is how many I have. In C, the entry point is an array of strings, and how many strings there are, it must be told how to interpret these pieces of data.
+Q: if an array doesn't grow, does it memory and size and memory allocation have to be specified at the initialization of the array?
+A:  in rust, you must specify a size on creation.
+    it can be a variable, usually n size.
+    there are also compiled time arrays which size must be specified.
+    an array has to have its size as part of its allocation.
+    you can't grow it.
+    you can reallocate it, meaning to create a new array, take the old array and write it into the new bigger array, now you have a bigger array, more room, but the arrays are fixed sizes.
+Q: In Javascript, are you creating an array under the hood?
+A:  yes, there is a literal array at some point in the memory under the hood, but it is not seen the same as the traditional sense in other languages.
+    in Java, it is the same data structure as JavaScript, it operates like an array but it is not.
+Q: how big is the array than when you instantiate?
+A:  thats the part of optimizing, if I create a new vector and choose size 5. It has 5 units to play with, is it enough? is it too small? too large that we must reallocate too often? if you declare large amounts of memory, you may not have to reallocate but you use a lot of memory for nothing.
+
+
+*Tip for the course to avoid confusion, if instructor primeagen uses the term array, he is referring to this process of contiguous memory. If he uses the term list, he is not referring to an array.*
+
+
+
+// below are my own notes on related topics for my own understanding, the terms and notes are not covered by the instructor // 
+
+More on an Array: 
+
+    Consider we have an array of 3 characters - [A,B,C]
+    We have a variable myArray, pointing at this array.
+    This means we have 3 bytes (assumming we have support for ASCII and not UTF-8)
+    In memory, we have 3 addresses allocated for this array. [A,B,C] -> [0x8015, 0x80016, 0x80017]
+    myArray can be a pointer to the beginning of the array, 0x8015, so if we are asking for letters we say, 'please give me 0x8015+0, 0x8015+1, 0x08015+2' 
+    &myArray+0, &myArray+1, &myArray+2 , also written as myArray[0], myArray[1], myArray[2]
+
+Array [A,B,C] memory address acccessed with pointers using certain syntax
+    A -  0x8015   === myArray[0] === &myArray+0
+    B -  0x8015+1 === myArray[1] === &myArray+2
+    C -  0x8015+2 === myArray[2] === &myArray+1
+
+
+Thinking in offset to the start of an array rather than which item at index 0, item at index 1, etc...
+Array[0] , the number in the bracket refers to the offset, not the index!
+    Index 0 means 0 offset to the start of the array, meaning the first item  -> 0 items since the beginning
+    Index 1 means 1 offset to the start of the array, meaning the second item -> 1 item since the beginning
+    Index 2 means 2 offset to the start of the array, meaning the third item  -> 2 items since the beginning 
+
+When we create an array, this contiguous block has a particular type that has a specific size. 
+Our examples above, we used U8intArray and U16intArray. 
+To reference this block of memory, we are given a memory address (pointer) to the start of this block and you can reference the next block as sizeof(type) away. 
+So array[0] is a pointer to the start of the memory block with an offset of 0 sizeof(type) into the block we are looking at. Array[1] is an offset of 1 sizeof(type) bytes, Array[2] is an offset of 2 sizeof(type) bytes, etc... 
+
+
+* Bit: is a binary unit, so either 0 or 1, on/off, yes/no, true/false
+* Byte: refers to a group of 8 bits, forming 256 possible meanings in the form of letters, punctuation, special characters, etc.
+
+History of Bits and Bytes:
+
+    // We use bits, a binary unit being 1 or 0 in computing as it is easily represented by a high or low voltage. 
+    // Bytes are a unit of memory, to find something in memory, it has to have an address. These addresses themselves are stored as bits, which means memory locations (and the spaces between them) are going to have to be powers of 2. (2,4,8,16,32,64) 
+    // 8 Bits, a byte, is a perfect size for memory as it is big enough for practical use but not so big as to be wasteful.
+    // each 8-bit byte was used to represent a single character in ASCII, ASCII is only good for English, UTF-8 is now used as it allows the use from 1 to 4 bytes per character, enabling encoding of all language characters, extra chars, emojis, etc.
+    // A byte could be any number of bits depending on the processor, in the past, there were 6-bit, 9-bit processors, etc.
+    // In the 70s, Intel 8080 popularized the 8-bit processor. This made the 8-bit processor and 8-bit data the standard moving forward as software and hardware all adopted it (also works with ASCII)
+    // Later on, we have the 16-bit processor, which is chosen because it is a multiple of 8 and makes it backward compatible with all the 8-bit data. Data is still handled in 8-bit sized bytes, and is the official standard of ISO/IEC
