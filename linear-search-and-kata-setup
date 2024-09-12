@@ -1,0 +1,26 @@
+Algorithms, the A in DSA
+
+To practice keeping things a certain size and using it in a specific way..
+When applicable
+ I will pretend JavaScript actually has arrays.
+ I only have access to the .length property.
+
+Protip: good practice to visualize the program, discuss it with boxes and arrows before programming it.
+
+
+Our first search! A linear search. Big O: O(N)
+
+  Visual representation of an array and a[0] ~ a[n]
+    a[        ]
+    a[0]    a[n]
+
+ A linear fn search(arr, v) would check, hey offset/position 0,  are you v? if yes, cool return, if not check the next one, etc...
+ IndexOf uses this linear search process under the hood, walking linearly until it finds the thing.
+ This is the simplest form of any search. 
+
+Setup for tests:
+  git clone git@github.com:ThePrimeagen/kata-machine.git
+  cd kata-machine
+  yarn install
+  yarn generate
+  vim $(yarn -s day) # or navigate to day1 folder
