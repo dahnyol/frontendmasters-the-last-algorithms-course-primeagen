@@ -1,0 +1,105 @@
+Ask yourself when it comes to your data set, is it ordered?
+ If yes, the data set is ordered, you have some advantages you can take.
+
+// Whiteboard to visualize your data //
+
+  [       ]
+ [0]      N
+
+We can jump to a point in the array and compare it to our desired value. We can find which direction in the array, left or right, depending on if they are greater or lower value than our desired value.
+If the current value > desired value, we know to continue to scan to the right of the array for larger values. 
+If current value < desired value, continue to scan left for smaller values.
+
+
+Math behind Big O of binary search:
+ 
+    Suppose we optimize this jump by moving 10% into the array every time.
+    Worst case scenario: jump 10%, jump 10% jump 10%, search our entire array and our desired number is larger. 
+    We have improved 10% of N. If we had 10 operations, it would be 10Operations + 1.1(N) -> drop constants -> O(N). 
+    
+    in a practical sense a small improvement but on a theoretically larger scale it is not much more.
+    10,000 to 1,000,000, algorithm will be 100x slower even though its still 10x faster than a linear searching every index, but the algorithm is barely improved with 10%.
+
+What if we jump to the middle of the array? Would this bigger jump improve the algorithm?
+
+    Worst case scenario: 1/2 of N, then half again -> 1/4, half again -> N/8 -> N/16 ...
+
+    if our desired value is k, 
+    then N/2K = 1 
+    -> log2N = k 
+    -> log(N) 
+
+    If we look at it practically..
+    4096 -> 2048 -> 1024 -> 512 -> 256 -> 128 -> 64 -> 32 -> 16 -> 8 -> 4 -> 2 -> 1
+    log4096 = 12 operations total. (the first number selected, the starting position, is not an operation)
+    12 halvings to get to 1. 
+    Worst case is its not in the array, so you would log(N) amount of halving.
+
+This is a binary search, two possible states, 1 or 0.
+Traverse this side or that side. 
+
+(technically could be a trinary if you count the desired value, the happy case)
+
+Binary search does not scan like a linear, it just divides, looks at the value, divides, looks at the value, etc...
+
+
+*Protip: If you have an input at each step, its either logN or NlogN*
+
+
+// Pseudo Code Binary Search //
+
+create a fn that takes in an array, a high and low number
+search(arr, low, hi, n)
+loop until a condition happens
+our condition: if low and hi are together, or equal/become each other, then we're done, we can no longer halve our space.
+ [       ]
+ 0       N
+ low      hi
+
+midPoint = Math.floor( low + (hi - low)/2 )
+                     offset +  midPoint
+
+    low+ is the offset, (hi - low) / 2 is the midpoint
+    we add the low + to adjust where we are starting from, which is the midpoint
+
+now we need the value, how do we store/get it?
+    value = array[midPoint], n = value we want to find
+now our three conditions
+    condition 1: value === n  
+    // we have what we want, return true or index
+    
+    condition 2: value > midPoint    
+    // our value is greater than the midPoint, so it is larger than everything on the left of the midPoint
+     [         ]
+     0    |--->N   // cont.. to check/divide right of the midPoint
+     low      hi
+          low + 1 - in front of where the midpoint is
+    // we can shrink our search area by adding to the lo = m + 1 to continue right of the array
+
+    condition 3: value < midPoint
+    // our value is less than the midPoint, so it is smaller than everything on the right of the midPoint
+      [         ]
+      0<---|    N  // cont.. to check/divide left of the midPoint
+      low      hi
+          hi = midPoint
+    // we can shrink our search area by setting hi = midPoint to continue left of the array
+
+Low is inclusive, which is why we add +1 to low
+Hi is always exclusive, which is why we set the new hi to the midPoint
+
+
+search(arr, low, high, n){
+        
+    do {
+        mid = floor(low + (high - low)/2)
+        v = arr[mid]
+        if(v === n) {
+            return t;
+        } else if (v > mid) {
+            low = mid + 1
+        } else {
+            high = mid
+        }
+    } while ( low < high )
+    return false; // n does not exist in arr
+}
