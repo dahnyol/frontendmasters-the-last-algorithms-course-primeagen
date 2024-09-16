@@ -1,0 +1,59 @@
+// Two Crystal Ball Problem //
+// Given two crystal balls that will break if dropped from high enough distance, determine the exact spot in which it will reak in the most optimized way.
+
+If we visualise this problem, a high distance is a 100 story building and you drop it and what floor would the crystal balls break? floor 10? floor 50? floor 100?
+In an data structure form 
+    -> each story the crystal ball falls and does not break, it is a false. 
+    -> when we hit the floor the crystal ball would break it would be true, and every point/floor further from then on it would break
+    -> an array of falses, then it hits condition true 
+
+    [f,f,f,..,t,t,t,..]
+    0                N
+      ------>
+Linear search would work, we walk to each floor and drop a ball, check if the ball broke, repeat until it breaks and report what floor it broke on. 
+Our generalized runtime is O(N)
+   
+Can we optimize this better though?
+    Remember we have TWO crystal balls to drop, not just one, how can we utilize this for optimization?
+    Are we SORTED? If we are dropping it from a 100 story building, it is ordered floor 0 to 100.
+    The array is essentially 0 0 0 0 0 until we hit 1 1 1 1 1 (0 it didnt break, 1 it breaks)
+
+Binary search walk, with two crystal balls
+
+    [f,f,f,..,t,t,t,..]
+    0                N
+      <-----,x[i] = t, ...
+        1/2 N
+
+    -> go to middle, floor 50, 
+    -> drop one ball
+    -> it breaks, we still have 1 ball
+now we have to walk linearly from the last known good point until we hit a bad point
+    -> we walk 1/2 of N
+Our generalized runtime we drop constants, so it is still O(N)
+Our generalized runtime is the same for linear and binary
+
+What else can we do to optimize?
+    We need to be able to jump by a fundamentally different unit because we can't jump some portion of N, we have to walk some portion of N.
+    
+What if jump the square root of N?
+    Jump square root of N until the balls, then we walk backwards to our last known point before breaking and find the point of breaking. 
+    If we have worst case, and have to walk back and have to walk forward, we are walking square root of N.
+   
+    [f,f,f,..,t,t,t,..]
+    0            sqrt(N)
+    ___     ___    ___ 
+  sqrt(N) sqrt(N) sqrt(N)    //  walk the array, square root of N at a time
+
+// our worst case is sqrt(N) + sqrt(N) , which is sqrt(N)
+
+So our worst case using sqrt(N) is that we will only have to back walk half the array
+
+*key point: We have broken down a search problem without doing a linear search*
+*Imagine a priority queue you cannot use, and we have to search it in a unique way, this may be a tool to use*
+
+
+Q&A:
+Q:  Why use sqrt ? not cube or something else?
+A:  In general we just want to avoid linear. As we increase root level, the closer we get to a linear runtime.
+    Cube would be smaller than sqrt for example and each jump would get progressively smaller, if we go quad root we get to the point where the jumps are so small it is practically jumping by one, one being linear.
