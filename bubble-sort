@@ -81,3 +81,29 @@ export default function bubble_sort(arr: number[]): void {
                 swap(i, j)
             }
 }
+
+In reality we are summing all the values.
+    First iteration: N - 1 times        ->   for j ... n - 1 - i
+    Second: N - 2
+    Third: N - 3 
+    ...
+    ending when the sum of all iterations is N = 1
+    (N * N + 1)/ 2 is the formula to sum all the iterations 
+-> N^2 
+
+The two loops add N^2 time: 
+        for i ... n
+        for j ... n - 1 - i
+
+The algorithm to swap is a constant O(1):
+        if(arr[i] > arr[j]) {
+            let temp = arr[j]
+            arr[j] = arr[j + 1]
+            arr[j + 1] = temp
+        }
+
+Q: Whats a good sorting algorithm for immutable arrays?
+A: Immutable arrays are exceptionally poor performing data structure.
+Immutability comes with ease of use, but it comes at the cost of space and replicating space.
+(Imagine each bubble sort you must create a new copy of N - worst case you must sort all items in the array creating a copy each time)
+*Never use immutability and sorting together as the performance may be terrible.*
