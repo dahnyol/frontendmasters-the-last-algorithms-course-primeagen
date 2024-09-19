@@ -3,19 +3,6 @@ const a = [] // not an array, what is it?
 
 An array is a contiguous memory space. (contiguous meaning unbreaking memory space in which contains a certain amount of bytes)
 
-Bit: is a binary unit, so either 0 or 1, on/off, yes/no, true/false
-Byte: refers to a group of 8 bits, forming 256 possible meanings in the form of letters, punctuation, special characters, etc.
-
-History of Bits and Bytes:
-
-    // We use bits, a binary unit being 1 or 0 in computing as it is easily represented by a high or low voltage. A byte is 8 bits.
-    // Bytes are a unit of memory, to find something in memory, it has to have an address. These addresses themselves are stored as bits, which means memory locations (and the spaces between them) are going to have to be powers of 2. (2,4,8,16,32,64) 
-    // 8 Bits, a byte, is a perfect size for memory as it is big enough for practical use and be an efficient use without being wasteful.
-    // In the past, byte did not mean 8 bits only, there were 6 bit, 9 bit, etc.
-    // In the 70s, Intel 8080 popularized the 8-bit processor. This made the 8-bit the standard moving forward as everyone adopted it.
-    // Later on, we have the 16-bit processor, which is chosen because it is a multiple of 8 and makes it backward compatible with all the 8-bit data. Data is still handled in 8-bit byte, and is the official standard of ISO/IEC
-
-
 Details on the basics of memory:
 
     Everything about a computer is just numbers. Ones and Zeroes. How memory is interpreted is based on what you tell the compiler on how to interpret it. The compiler will see a chunk of memory, and say 'these four bytes, I'm going to treat as a singular number'.
@@ -104,7 +91,7 @@ Operations we can do:
 
 -Arrays are a fixed size, contiguous memory chunks
 -We cannot grow it
--There is no 'insertAt' or push or pop. Doesn't mean you cant' write those though, we can implement a way of growing, we can implement popping and pushing inside of our algorithms.
+-There is no 'insertAt' or push or pop. Does not mean you can not write those though, we can implement a way of growing, we can implement popping and pushing inside of our algorithms.
 
 
 Q&A
