@@ -1,0 +1,157 @@
+Earlier we said const a = []; is not an array. Why or why not?
+    An array is a fixed contiguous memory space, how can we add or remove anything?
+    This means it may an array under the hood, or it close to an array but it has added abilities, ability to insert, or delete which adjusts the array indices.
+
+If we had an array, we can't delete, or insert, its ungrowable.
+
+Lets talk LinkedList
+How does it work?
+ 
+    Single Linked
+    Doubly Linked
+
+LinkedLists are a often called a node based data structure. Node is the type of container that will wrap our data.
+
+If you have a series of values, you will see data organized in a way
+   
+    (A) -> (B)-> (C) -> (D)
+
+When we visit node (A), it will also point to the next node, node (B).
+This also means we can't get (i)th structure, we must start at the head element and walk index 1, 2, 3, 4... i and return the value.
+
+We call them nodes because we wrap the value in a container,
+  we are given the value T, we wrap it in a node container <T>
+    node<T>
+    val:T
+    next?: Node<T>
+
+ This is the walking/allocating of memory.
+
+A linked list is fundamentally a node that contains a value and a reference to another value or to another node.
+We can walk this daisy chain of nodes which contain values. 
+
+Single linked list : (A) -> (B) -> (C) -> (D) 
+    // A references B , but once we walk to B we do not have a reference to go back  to A. We can only walk forward to C. As we walk to C, we don't have a reference to B. If we head node (B) we have no access to (A).
+
+
+Doubly linked list : (A) <--> (B) <--> (C) <--> (D) 
+ we have an additional property, the reference to the previous node
+    node<T>
+    val:T
+    next?: Node<T>
+    prev?: Node<T>
+
+Bi-directional - These links allow us to walk backwards after we have walked forwards. 
+
+Say we have an incoming series of numbers/data, we need the ability to store and organize these numbers/data within the linked list. We create a container to put them into and manages it. (Instead of an array, it uses heap allocated objects)
+
++ Insertion
+ Are generally very fast, O(1) constant time.
+ Similar to traditional style of setting a piece of memory on an object.
+
+ (A) <--> (B) <--> (C) <--> (D) 
+    \    / 
+     (F)
+
+// to insert F we have to reference A to F, F to A and reference F to B and B to F. 
+// this means we lose A linked to B, with A linked to F and F linked to B.
+
+(A) <--> (F) <--> (B) <--> (C) <--> (D) 
+
+// we have effectively moved everything over and inserted F.
+// when doing this, we had to set 2 next properties, 2 prev properties: A -> F, F -> B, F <- B, A <- F 
+// what is time complexity of these operations of setting next and prev? we can assume its constant O(1) We are simply setting a property it does not scale with input or how many are in the list.
+
+
+- Deletion
+ Are generally very fast, O(1) constant time.
+
+// we want to delete node C
+
+// get point B to point to D
+
+    (A) <--> (B) <--> (C) <--> (D) // to get access to D and link it to B, we have to go through C 
+
+    (A) <--> (B) <-// (C) //-> (D) // We walk through to C, must break the link from B to C
+
+we walk ...
+    C -> B -> C     // C to B back to C and break that link
+    C -> B //> C    // 
+    C -> D          // we have to go back, take its next and point to our current ones
+
+B = C.prev
+B.next = C.next
+    
+    (A) <--> (B) <- /// /// -> (D)
+
+// B now points to D
+
+// Now we must have D point to B
+D.prev = C.prev        // point D now points to B
+C.prev = C.next = null // take it out of the graph, C is no longer pointing to anything. Could return c.value
+
+// C is deleted.
+
+*Order of operations is very important, If we said C.next = undefined, we could never access D again.*
+
+In linked lists, there is no index. 
+There is access to a node that we must traverse to get to the node you desire.
+
+Running time of deletion: the input size has no effect on the deleting part, nor does the value have any effect.
+It is based on four links, it is a constant O(1).
+Setting C.prev or D.prev are also constant time operations, it is setting memory to undefined.
+
+
+
+// Linked List Complexity //
+
+Weaknessness and Strengths of a linked list
+    - a bit complicated
+    - it's not contiguous memory
+    - list can be whatever size you want it to be.
+    - deletion from the front or back are fast. 
+        ex: often times we delete the oldest item, if sorted oldest item will be at the tail
+
++ Prepend / Append
+    Constant time, because you are able to insert and just break the links from head or tail
+
++ Insertion in the middle
+    Two operation cost: the traversal and the insertion
+
++ Deletion from ends
+    Constant time, we have a defined pointer to the ends
+
++ Deletion in the middle
+    Two operation cost: the traversal and the deletion
+    
++ Get head / tail
+    Targeting the head and tail are both constant time operations.
+    If our linked list implementation has a single refernce, the head that points to the first item in the list, it is a defined pointer to it
+    Tail of our linked list also already has a defined pointer to it
+
++ Get in general
+    With the node structure, we must walk the list to find our desired values.
+    If we want the 5th value, we have to loop -> for.. 5 loops.. current = current.next, return value. 
+*never return the node! the container node is our abstraction for ourselves, not for the outside world!*
+
+// linked list kata api
+Interface LinkedList<T> {
+    getLength(): number;
+    insertAt(item: T, index: number): void;
+    remove(item: T): | undefined;
+    removeAt(index:number): T | undefined;
+    append(item: T): void;
+    prepend(item: T): void;
+    get(index: number): T | undefined;
+}
+
+if we don't have a reference pointer to a specific node, we have to traverse
+In general we don't want to traverse too much,
+so when thinking of implement a linked list thing of how much traversal you may need to do, and if it is a lot it may not be a good data structure. 
+The basis on how we traverse and move around node by node in a linked list underly many other data structures. 
+
+Linked List are fundamental unit.
+
+Every linked list is a graph.
+
+Every linked list is technically a tree.
