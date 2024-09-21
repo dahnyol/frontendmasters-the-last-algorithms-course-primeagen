@@ -1,0 +1,120 @@
+A stack, similar to a queue, is a specific implementation of a linked list.
+ 
+ It is something in which looks like a queue or acts like a queue,
+ It is a singly linked list in which you only add and remove from the head.
+ 
+Our node container and linked list:
+    Node<T>
+        value: T
+        next?: 
+        prev?:
+
+    (A) <- (B) <- (C) <- (D)
+     |                    |
+    tail                 head
+// as if we push in A, push in B, push in C, push in D
+// it is backwards to a queue -- the tail and head are switched
+
+First In Last Out, or Last In First Out
+- Often visualized as a stack of pancakes
+    |___|(D)
+    |___|(C)
+    |___|(B)
+    |___|(A)
+
+// add (E) to a stack
+   (A) <- (B) <- (C) <- (D)  +  (E)
+    |                    |
+   tail                 head
+// We take E and point to the head
+   (A) <- (B) <- (C) <- (D) <-- (E)
+    |                    |
+   tail                 head
+// Update the head pointer to E
+   (A) <- (B) <- (C) <- (D) <- (E)
+    |                           |
+   tail                        head
+
+// remove (E) to a stack
+   (A) <- (B) <- (C) <- (D) <- (E)
+    |                           |
+   tail                        head              
+// Const head = this.head, 
+// update head.prev or head.next  
+   (A) <- (B) <- (C) <- (D) -- (E)
+    |                      \     
+   tail                     head
+// Update the head pointer to D
+   (A) <- (B) <- (C) <- (D)      //return out (E), break connection with (D)
+    |                    |
+   tail                 head
+
+Stacks and Queues are often used, beware of mixing them/confusing them with one another.
+
+Protip: Useful to think of calling functions like a stack
+
+Operations of a stack are all constant time:
+-push
+-pop
+-peek
+// peek: take the head, if there is a value return it, else don't return anything
+
+All constant time operations: we are either setting things to null or setting pointers to point to different values.
+(In JavaScript it is different but its always different)
+
+// Implementing a stack
+// Stack
+
+type Node<T> = {
+   value: T,
+   prev?: Node<T>,
+}
+
+export default class Stack<T> {
+   public length: number;
+   // define our head and tail
+   private head?: Node<T>;
+   private tail?: Node<T>;
+
+   constructor() {
+      this.head = undefined;
+      this.length = 0;
+   }
+
+   push(item: T): void {
+      const node = {value:item} as Node<T>;
+      this.length++; // bookkeeping
+      // if there is no head and returns undefined
+      if(!this.head) { 
+         // set our head to the node
+         this.head = node;
+         return;
+      }
+      // point to the head with our new node
+      node.prev = node;
+      // point head to the new node
+      this.head = node;
+   }
+   
+   pop(): T | undefined {
+      this.length = Math.max(0, this.length - 1); // countdown, if at 0 stay at 0
+      if(this.length === 0) {
+         const head = this.head;
+         this.head = undefined;
+         return head?.value;
+      }
+      // detach the head
+      // save pointer to head
+      const head = this.head as Node<T>;
+      this.head = head.prev;
+      // update head to point back to the previous
+
+      // free in other langauges but not needed in JavaScript
+      return head.value;
+      // return value
+   }
+
+   peek(): T | undefined {
+      return this.head?.value;
+   }
+}

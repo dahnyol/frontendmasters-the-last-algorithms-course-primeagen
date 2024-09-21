@@ -118,17 +118,49 @@ export default class Queue<T> {
 // Stack
 export default class Stack<T> {
     public length: number;
- 
-     
+    // define our head and tail
+    private head?: Node<T>;
+    private tail?: Node<T>;
  
     constructor() {
+       this.head = undefined;
+       this.length = 0;
     }
  
     push(item: T): void {
+       const node = {value:item} as Node<T>;
+       this.length++; // bookkeeping
+       // if there is no head and returns undefined
+       if(!this.head) { 
+          // set our head to the node
+          this.head = node;
+          return;
+       }
+       // point to the head with our new node
+       node.prev = node;
+       // point head to the new node
+       this.head = node;
     }
+    
     pop(): T | undefined {
-    }
-    peek(): T | undefined {
+       this.length = Math.max(0, this.length - 1); // countdown, if at 0 stay at 0
+       if(this.length === 0) {
+          const head = this.head;
+          this.head = undefined;
+          return head?.value;
+       }
+       // detach the head
+       // save pointer to head
+       const head = this.head as Node<T>;
+       this.head = head.prev;
+       // update head to point back to the previous
  
+       // free in other langauges but not needed in JavaScript
+       return head.value;
+       // return value
+    }
+ 
+    peek(): T | undefined {
+       return this.head?.value;
     }
 }
