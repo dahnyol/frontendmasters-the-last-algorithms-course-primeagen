@@ -1,0 +1,48 @@
+What are these things exactly? 
+Is it an algorithm or a data structure?
+It uses a data structure, we perform an algorithm on top of the data structure. 
+What is a linked list? 
+The insertion is the algorithmic side, the actual setup is the data structure itself?
+
+Our first data structure on top of a linked list is going to be a queue.
+
+QUEUE : First In First Out 
+
+One of the most common data structures implemented.
+    (ex from instructor: had to shove a video down a video decoder, had to use a buffer too do this. When inserting this it is important to have the correct order, first in first out. he used a queue to accomplish this.)
+
+A queue is just a specific implementation of a linked list.
+
+    (A) -> (B) -> (C) -> (D)
+     |                    |
+     h                    t
+
+We have a pointer to head (A) and tail (D)
+
+// what if we insert E to the tail?
+// this.tail.next = E ; Update our current tail (D) to point to (E)
+// this.tail = E ; Update our tail to point to (E)
+
+// what if we want to pop the head?
+// we want to move the head forward
+// const = head, point head to B, then take the previous old head, remove the link and return the value.
+// this.head = head  
+// head = head.next
+// h.next = null
+// return h.val
+
+Implement a queue is simple because it constraints what you can do. First in first out, you only operate on the head or tail, both of which are constant operations.
+The pushing into a queue is constant, popping from a queue is the same thing in reverse, which is constant, so a queue is 
+constant time.
+
+A very fast specific algorithm, first in, first out.
+
+Running time
+-enqueue
+-deque
+-peek (check first element without popping it off)
+
+In the world of Data Structures and Algorithms, constraints make things fast.
+Many times datastructures that are fast are because of the lack of features.
+
+Underneath the good of a queue, it is a generalized linked list. 
