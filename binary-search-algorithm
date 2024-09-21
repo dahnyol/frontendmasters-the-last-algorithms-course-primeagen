@@ -103,3 +103,28 @@ search(arr, low, high, n){
     } while ( low < high )
     return false; // n does not exist in arr
 }
+
+// Implementing Binary Search //
+
+// Binary Search List //
+export default function bs_list(haystack: number[], needle: number): boolean {
+    let low = 0;
+    let high = haystack.length;
+
+    do {
+        const mid = Math.floor(low + (high - low) / 2);
+        const value = haystack[mid];
+
+        if (value === needle) {
+            return true;
+        } else if (value > needle) {
+            // high is inclusive, our needle is lower than our selected mid, search left of our high. 
+            high = mid;
+        } else {
+            // low is exclusive, we do not include the mid as we do not need to search again, our needle is higher than the selected mid, search right, so move our low to throw away all the ones lower than mid
+            low = mid + 1
+        }
+        
+    } while (low < high)
+    return false;
+}

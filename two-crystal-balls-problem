@@ -57,3 +57,36 @@ Q&A:
 Q:  Why use sqrt ? not cube or something else?
 A:  In general we just want to avoid linear. As we increase root level, the closer we get to a linear runtime.
     Cube would be smaller than sqrt for example and each jump would get progressively smaller, if we go quad root we get to the point where the jumps are so small it is practically jumping by one, one being linear.
+
+
+// Implementing two-crystal-balls problem //
+// Two Crystal Ball Problem //
+
+export default function two_crystal_balls(breaks: boolean[]): number {
+    // assume the array is big enough to have a sqrt
+    // constant jump the sqrt(N) -> math.sqrt(array) -> math.sqrt(breaks.length)
+    const jumpAmount = Math.floor(Math.sqrt(breaks.length));
+    // use our first crystal ball to see where does it break
+    let i = jumpAmount;
+    // start at the first jump
+    for (; i < breaks.length; i += jumpAmount) {
+        // current array value is true, we found a break point, break;
+        if (breaks[i]) {
+            break;
+        }
+    }
+    // we jump back sqrt(N) 
+    i -= jumpAmount;
+
+    // start at the last known point before break  
+    // walk linear at most, a sqrt(N) until we find our break
+    // && make sure not to jump too far in the arr (i < breaks.length).
+    for (let j = 0; j < jumpAmount && i < breaks.length; ++j, ++i) {
+        if (breaks[i]) {
+            // return the index when it breaks
+            return i;
+        }
+    }
+    // crystal ball never breaks
+    return -1
+}

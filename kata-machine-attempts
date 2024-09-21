@@ -1,6 +1,5 @@
 // Linear Search Lists //
 export default function linear_search(haystack: number[], needle: number): boolean {
-    // find the needle in the haystack, check if the number is in our array. return true or false
     for (let i = 0; i < haystack.length; ++i) {
         if (haystack[i] === needle) {
             return true;
@@ -22,10 +21,8 @@ export default function bs_list(haystack: number[], needle: number): boolean {
         if (value === needle) {
             return true;
         } else if (value > needle) {
-            // high is inclusive, our needle is lower than our selected mid, search left of our high. 
             high = mid;
         } else {
-            // low is exclusive, we do not include the mid as we do not need to search again, our needle is higher than the selected mid, search right, so move our low to throw away all the ones lower than mid
             low = mid + 1
         }
         
@@ -36,40 +33,28 @@ export default function bs_list(haystack: number[], needle: number): boolean {
 
 // Two Crystal Ball Problem //
 export default function two_crystal_balls(breaks: boolean[]): number {
-    // assume the array is big enough to have a sqrt
-    // constant jump the sqrt(N) -> math.sqrt(array) -> math.sqrt(breaks.length)
     const jumpAmount = Math.floor(Math.sqrt(breaks.length));
-    // use our first crystal ball to see where does it break
     let i = jumpAmount;
-    // start at the first jump
+
     for (; i < breaks.length; i += jumpAmount) {
-        // current array value is true, we found a break point, break;
         if (breaks[i]) {
             break;
         }
     }
-    // we jump back sqrt(N) 
     i -= jumpAmount;
 
-    // start at the last known point before break  
-    // walk linear at most, a sqrt(N) until we find our break
-    // && make sure not to jump too far in the arr (i < breaks.length).
     for (let j = 0; j < jumpAmount && i < breaks.length; ++j, ++i) {
         if (breaks[i]) {
-            // return the index when it breaks
             return i;
         }
     }
-    // crystal ball never breaks
     return -1
 }
 
 
 // Bubble Sort //
 export default function bubble_sort(arr: number[]): void {
-    // for i ... n
     for (let i = 0; i < arr.length; ++i) {
-        // for j ... n - 1 - i
         for (let j = 0; j < arr.length - 1 - i; ++j) {
             if (arr[j] > arr[j + 1]) {
                 let temp = arr[j]
@@ -82,57 +67,68 @@ export default function bubble_sort(arr: number[]): void {
 
 
 // Queue //
-// queue node that is generic over T
 type Node<T> = {
     value: T,
-    next?: Node<T>, // we don't know if there will be another node
+    next?: Node<T>,
 }
+
 export default class Queue<T> {
     public length: number;
-    private head?: Node<T> // head? functions the same as -> | undefined
-    private tail?: Node<T> // head and tail have references even if undefined, they are of generic node over T.
+    private head?: Node<T> 
+    private tail?: Node<T> 
     
-    // now we can pass an value, we create our own container and manage the state ourselves.
     constructor() {
         this.head = this.tail = undefined;
         this.length = 0;
     }
-    // add to que
+
     enqueue(item: T): void {
         const node = {value: item} as Node<T>;
-        this.length++; // add item to que update size 
-        // if no tail, it is an empty array
+        this.length++; 
+        
         if (!this.tail) {
-            // our next is undefined, our value is the item, its of type T, node is generic over T
             this.tail = this.head = node;
             return;
         }
-        // took our tail and added a new one to the list
         this.tail.next = node;
-        // now we point to the new tail
         this.tail = node;
     }   
-    // remove from que
     deque(): T | undefined {
-        // first check, do we have a head? if no head return undefined
         if (!this.head) {
             return undefined;
         }
 
-        this.length--; // we remove item so update length 
-        // we first update head to point to the next value
-        // save our head const head
+        this.length--; 
         const head = this.head;
-        // update our head pointer to the next one
         this.head = this.head.next;
+        
         // free - garbage collection (not needed in JavaScript)
         head.next = undefined;
-        // return head value
+        
         return head.value;
     }   
-    // look at the front of que
+    
     peek(): T | undefined {
-        return this.head?.value; // null coalescing operator, if head is not null or not undefined, return the value, else return undefined
+        return this.head?.value; 
 
+    }
+}
+
+
+// Stack
+export default class Stack<T> {
+    public length: number;
+ 
+     
+ 
+    constructor() {
+    }
+ 
+    push(item: T): void {
+    }
+    pop(): T | undefined {
+    }
+    peek(): T | undefined {
+ 
     }
 }

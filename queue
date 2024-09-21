@@ -46,3 +46,61 @@ In the world of Data Structures and Algorithms, constraints make things fast.
 Many times datastructures that are fast are because of the lack of features.
 
 Underneath the good of a queue, it is a generalized linked list. 
+
+// Implementing a Queue //
+// queue node that is generic over T
+
+type Node<T> = {
+    value: T,
+    next?: Node<T>, // we don't know if there will be another node
+}
+
+export default class Queue<T> {
+    public length: number;
+    private head?: Node<T> // head? functions the same as -> | undefined
+    private tail?: Node<T> // head and tail have references even if undefined, they are of generic node over T.
+    
+    // now we can pass an value, we create our own container and manage the state ourselves.
+    constructor() {
+        this.head = this.tail = undefined;
+        this.length = 0;
+    }
+    // add to que
+    enqueue(item: T): void {
+        const node = {value: item} as Node<T>;
+        this.length++; // add item to que update size 
+        // if no tail, it is an empty array
+        if (!this.tail) {
+            // our next is undefined, our value is the item, its of type T, node is generic over T
+            this.tail = this.head = node;
+            return;
+        }
+        // took our tail and added a new one to the list
+        this.tail.next = node;
+        // now we point to the new tail
+        this.tail = node;
+    }   
+    // remove from que
+    deque(): T | undefined {
+        // first check, do we have a head? if no head return undefined
+        if (!this.head) {
+            return undefined;
+        }
+
+        this.length--; // we remove item so update length 
+        // we first update head to point to the next value
+        // save our head const head
+        const head = this.head;
+        // update our head pointer to the next one
+        this.head = this.head.next;
+        // free - garbage collection (not needed in JavaScript)
+        head.next = undefined;
+        // return head value
+        return head.value;
+    }   
+    // look at the front of que
+    peek(): T | undefined {
+        return this.head?.value; // null coalescing operator, if head is not null or not undefined, return the value, else return undefined
+
+    }
+}
