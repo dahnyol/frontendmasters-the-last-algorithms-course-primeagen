@@ -1,0 +1,54 @@
+Array Buffer 
+ Array like storage, 0 to N, but our head is not 0 and tail is not length - 1.
+ Instead there is an index based head and index based tail.
+  Array like storage
+  [...............]
+  0               N
+       |     |
+     head    tail
+ <--null     null-->  // everything left of the head and left of the tail are null.
+  
+  [null|items|null]   // everything within the head and the tail are the items that you have. 
+  0     .....     N
+
+How to remove from the front? 
+ +1 to the head, head = head + 1;
+ Now that item that was in the head is no longer there,
+ we clean it up and return it out, 
+ we now have a new head.
+
+If we do remove from the tail?
+ tail = tail + 1; we have now updated it like we would the head
+
+Big O: Pushing, popping, shifting, unshifting are all O(1) operations.
+
+What if we go off data?
+This where the ringbuffer comes in, as you ring around your array structure
+this.tail % length will give you your index into the array, so you can ring around it.
+
+  [...............]
+  0               N
+     | |   | |
+   h+1 h   t t+1
+    |          |
+    t          h    // ring around, switching the t and h -> this.tail % length 
+ <--null     null--> 
+
+Ex: we have an array capacity of 10, our tail is 12.
+12 % 10 = 2, our tail is in the position of 2.
+
+if our head was 24, 24 % 10 = 4, our head is in the position of 4. 
+
+Our tail is at 2, our head is at 4, we have rung around our tail and head rather than going out of bounds  
+  [...............]
+  0  | |          10
+     t h
+
+Problem beware: 
+    Your tail should never exceed your head. 
+    If this happens, you need to resize. 
+    Ringbuffers maintain order.
+
+How to resize a ringbuffer
+In the situation in which the tail is now where the head is at, and you are trying to insert,
+you have to start at your head, go to length, and write into a new larger capacity buffer.
