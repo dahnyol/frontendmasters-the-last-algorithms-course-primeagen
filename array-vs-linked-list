@@ -1,0 +1,106 @@
+Array vs Linked List
+Contrast: Usability, Time, Space
+
+Arrays
+    Usability
+        - Uses indices to access a value.
+        - underneath the hood it is simply allocating memory, accessing it and setting, memory is understood on the type you cast it to.
+        - No literal insert, only insert right, which means everytime you insert a value, you must shift or unshift every other value over manually (using a for loop).
+
+    Time
+        - O(1) constant time operations: write over a value, get a value.
+        - You must allocate all the memory upfront (If you have maybe up to 1000 items, you allocate for 1000 items and may or may not use all the space).
+        - Memory is already retrieved, so accessing/setting is fast.
+
+Linked Lists
+    Usability
+        - Linear search is the only option when looking for an item in a linked list. To get an item out of the list, you must traverse each item in the list until you find it.
+
+
+    Time
+        - Memory use optimized, each time you insert you only create a single containing node, insert two nodes creates two containing nodes. 
+        - Runtime cost per node are the operations do take more work to set/destroy links. (small tricks to address these issues like creating a cache object to pool/hold deleted nodes,etc..)
+
+
+Small trade-offs to keep in mind:
+    We want to scan a list or hop into a list of random access: Array
+    We want to just push/pop from the head or tail: Linked List
+
+Both have advantages when implemented for certain scenarios:
+    Example: 
+     Handling multiple async requests.
+     We have promises that will be generated and go off, but we only want 5 of them active at any point.
+     We implement a queue that holds up to 5 requests, so we pop off one request as it it finishes and push onto the back as new requests come in.
+     A linked-list may be better than an array for this use case because there is no need to worry about shifting indices, which will affect performance.
+
+
+
+// ArrayList //
+We want the ability to grow, which we normally write ourselves (for loop, shift indices, etc), but are now provided.
+In JS we have ArrayList. (used in maps, ring buffers, etc)
+
+Instead underlying containers liked a linked list, we have an array of generic T and use that.
+    Say we have an array with 1 element and 2 empty elements.
+    
+    [2, ,  ]    
+    0      3  
+ 
+ We have a Length of 1, one item, but have a capacity of 3
+ 
+When you get(idx) 
+ // make sure we stay in bounds of our arrayList, so check if out of bounds
+ if(idx >= length), throw an error or undefined..
+ 
+When you push(idx) or pop(idx)
+ // we must create a push operation on top of an array
+ // make sure we we are within our capacity of 3
+ // increment the length++ to point to the next part
+ push(val: T)
+ pop(): T | undefined
+  
+This is essentially what an array list does/is.
+It uses an array as the fundamental datatype instead a node-based structure
+And uses pushes/pops to do operations in the same way you would a node-based structure.
+
+What is our Big O?
+ Our operations:
+    -Use length (simple lookup for an address in memory)
+    -Write it to an array using push / pop
+    -Increment/Decrement length
+ Constant Time, as none of these depend on input.
+
+   Garbage Collection/Cleanup: generally don't have to zero out the data with primitive structures, as length keeps track of what we have. But you still can if you want. In JS maybe set to null
+
+What happens if we run out room? length = capacity?
+    We can create a new array of some longer length.
+    Can memoize/copy values to new longer array, and the length would still point to the same. 
+
+These operations are what an Array List does under the hood. It helps you make an actual array structure more dynamic with its ability to grow.
+The reason we capacity often on traditional structures is to optimize how much memory to use and not waste a bunch of extra space.
+A balancing act of use the least amount of memory but also do the least amount of growing operations.
+
+Why we should stick to push and pop operations on an Array List?
+-It stays constant time O(1) operations as our array capacity does not have to grow.
+
+What if we use enqueue and dequeue on an Array List? 
+-Performance issues arise quickly when using enqueue and dequeue on an Array List as this becomes a O(N) operation. 
+
+Why? say we have an array with 3 items and a capacity of 3 items.
+    [2,3,5]  length = 3, capacity = 3
+
+// we have to expand our array by 3 to make space for enqueue
+    [2,3,5, , , ] length = 3, capacity = 6
+
+// array would have to shift each element starting at length = 3
+    [ ,2,3,5, , ] length = 3, capacity = 6
+    -> -> -> ->
+
+// so 5 would shift back , 3 shift back to where 5 was, 2 shift back to where 3 was
+// first element space is now empty for enqueue operation
+// the operations are similar for dequeue.
+
+So node-based items use enqueue dequeue as it stays a O(1) constant time.
+And array lists use push and pop operations as it stays a O(1) constant time.
+
+Array lists have angle bracket accessing, which means random access is possible in constant time
+But you can't remove from the front, It is always a trade-off.
