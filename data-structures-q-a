@@ -1,0 +1,69 @@
+Under the hood what type of data structure is being used with const a = [] ?
+It is an arrayList when we put it under our array-tests.
+
+Q: Was it an array or not? 
+
+A:  It is not an array because we can grow it, we can push and pop and have a notion of beginning and end.
+    An array does not have a capacity vs a length, it is a contiguous spot of memory, it is referred to as a static array. 
+    A linked or arraylist is referred to as a dynamic array, as it has operations on top of it, a length and capacity.
+
+Q: What about slice?
+
+A:  Slice is just a copy. Slice(i,j) means You are copying from say i, up to, but not including, say j. 
+    Slice(Start here, End up to, but not including here)
+    It is effectively just like a memoize copy, it is a linear operation.
+    It will take that amount of memory and copy it to a new location, and then hand it to you.
+    If you are using an arrayList under the hood you can create a copy method -> create new arr, copy all elements in, take all my state -> we now have two separate copies that can be adjusted.
+
+Q: Is there a way it's not a copy, where it is slice?
+
+A:  It depends what you mean by copy. 
+
+    example 1:  
+        >   const a = new Uint8Array(10)
+        >   a[0] = 5
+        >   a[1] = 5
+        >   a[2] = 69
+        >   a               // Uint8Array(10) [5, 5, 69, 0, 0, 0, 0, 0, 0, 0]
+        >   const b = a.slice(0, 5)
+        >   b[3] = 5
+        >   a               // Uint8Array(10) [5, 5, 69, 0, 0, 0, 0, 0, 0, 0] 
+        
+        // a is the same, not affected by the writes to b.
+        // we have done a deep copy of the data.
+    
+    example 2:
+        >   const buf = Buffer.alloc(5)
+        > buf instanceof Uint8Array    // true
+        > buf.writeUint8(5, 0)         // 1 // write value 5, offset 0. 
+        > buf                          // <Buffer 05 00 00 00 00>
+        > const buf2 = buf.slice(0, 5)
+        > buf2.writeUint8(5, 3)        // 4 // write value 5, offset 3.
+        > buf                          // <Buffer 05 00 00 05 00>
+        
+        // buf was changed after writes to buf2.
+        // in node our buffers are shallow sliced, they simply have offsets within this contiguous memory space.
+        // this means it simply adjusts the indices, and then still points to the same piece of memory underneath the hood. 
+
+    Be aware of these differences as it can lead to situations where you are mutating data when you don't think you are.
+    So slice can be linear if it is a copy (deep copy),
+    It can also be constant if it is just pointing at new indices (shallow copy)
+    Buffer is like a implementation of an arraylist, a under the hood it may be a backing bigger etc.
+
+Q: Where would I apply this code? What are some typical examples? For example, you use x data structure often, so how?
+
+A:  Any sort of log or flushing.
+    Flushing in general is when you batch operations, you're using some sort of data structure underneath the hood, you want to pick an efficient one. 
+    You wouldn't want to do a linear add or remove if you are not flushing the entire thing, which is bad for a service.
+    This is more often done on the backend than the frontend, in the frontend would be writing an library.
+    React code will have a lot of managing and keeping track of state, trying to be as efficient as possible.
+    Tend to use it in library development, caching layer at Netflix for TV, for JavaScript I did trees, linked lists and maps.
+    Everything needs to be O(1), cannot interrupt the UI.
+    Backend or library dev.
+    Writing a UI component often is not doing logic, just displaying logic or limited logic so it is more shallow.
+
+Q: When dealing with big data, what is your go-to?
+
+A:  I dont deal with much big data, I don't have a great answer.
+    Hive as a newbie.
+    Big data or often applications of these principles, map and reduce, you have consistant hashes, you have to map things to specific compluters that we can run medians, etc. They're all applicaitons of these algorithms but ran distributedly. Kafka is a queue but it is a much more complicated queue.

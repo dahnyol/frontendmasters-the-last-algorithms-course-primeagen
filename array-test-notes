@@ -1,0 +1,120 @@
+
+const a: number[] = [];
+
+function time(fn: () => void): number {
+    const now = Date.now();
+    fn();
+    return Date.now() - now;
+}
+
+function unshift(number: number) {
+    for (let i = 0; i < number; ++i) {
+        a.unshift(Math.random());
+    }
+}
+
+function shift(number: number) {
+    for (let i = 0; i < number; ++i) {
+        a.shift();
+    }
+}
+
+function push(number: number) {
+    for (let i = 0; i < number; ++i) {
+        a.push(Math.random());
+    }
+}
+
+function pop(number: number) {
+    for (let i = 0; i < number; ++i) {
+        a.pop();
+    }
+}
+
+function get(idx: number) {
+    return function() {
+        return a[idx];
+    };
+}
+
+// higher order functions for push,pop,unshift,shift
+function push_arr(count: number) {
+    return function() {
+        push(count);
+    };
+}
+
+function pop_arr(count: number) {
+    return function() {
+        pop(count);
+    };
+}
+
+function unshift_arr(count: number) {
+    return function() {
+        unshift(count);
+    };
+}
+
+function shift_arr(count: number) {
+    return function() {
+        shift(count);
+    };
+}
+
+// do a stepladder approach to testing, to see how it grows 
+// in this case, we should see slowdown as the array gets bigger
+const tests = [10, 100, 1000, 10000, 100000, 1_000_000, 10_000_000];
+console.log("Testing get");
+tests.forEach(t => {
+    a.length = 0;
+    push(t);
+    console.log(t, time(get(t - 1))); // push in the value and do a get at the last element.
+});
+
+console.log("push");
+tests.forEach(t => {
+    a.length = 0;
+    push(t);
+    
+    console.log(t, time(push_arr(1000))); // push 1000 items after growing it to a certain point to simulate the slowdown every step.
+});
+
+console.log("pop");
+tests.forEach(t => {
+    a.length = 0;
+    push(t);
+
+    console.log(t, time(pop_arr(1000))); // pop 1000 items ''
+});
+
+console.log("unshift");
+tests.forEach(t => {
+    a.length = 0;
+    push(t);
+
+    console.log(t, time(unshift_arr(1000))); // unshift 1000 items ''
+});
+
+console.log("shift");
+tests.forEach(t => {
+    a.length = 0;
+    push(t);
+
+    console.log(t, time(shift_arr(1000))); // shift 1000 items ''
+});
+
+// using tests we can empirically know what type of list we are using.
+// if the list type is linear-base we will see it simulate the slowdown as we increase by factor N.
+
+
+// AFTER TESTS //
+
+// we see get, push, pop have constant operations, the increase of N input didn't matter.
+// unshift and shift increase as N increases.
+
+// get  push/pop    un/shift
+// O(1)    O(1)       O(N)
+
+// we have an arrayList, so const a = [] is an arrayList under the hood.
+// *if we hade a node-based linked list, tests would show both enqueue and dequeue as constant O(1) operations, not linear O(N)*

@@ -36,6 +36,7 @@ Both have advantages when implemented for certain scenarios:
 
 
 // ArrayList //
+
 We want the ability to grow, which we normally write ourselves (for loop, shift indices, etc), but are now provided.
 In JS we have ArrayList. (used in maps, ring buffers, etc)
 
@@ -75,8 +76,9 @@ What happens if we run out room? length = capacity?
     We can create a new array of some longer length.
     Can memoize/copy values to new longer array, and the length would still point to the same. 
 
-These operations are what an Array List does under the hood. It helps you make an actual array structure more dynamic with its ability to grow.
-The reason we capacity often on traditional structures is to optimize how much memory to use and not waste a bunch of extra space.
+These operations are what an Array List does under the hood. 
+It helps you make an actual array structure more dynamic with its ability to grow.
+The reason we set capacity often on traditional structures is to optimize how much memory to use and not waste a bunch of extra space.
 A balancing act of use the least amount of memory but also do the least amount of growing operations.
 
 Why we should stick to push and pop operations on an Array List?
