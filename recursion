@@ -1,0 +1,87 @@
+Avoid reg X. 
+Reg X's are just graphs underneath the hood, and traversing is the characters in which go through that.
+
+RECURSION
+    A visual aid, googles joke: if you google recursion it asks "do you mean recursion?" click it and google will ask "do you mean recursion?"
+
+    It is something that keeps calling itself until the problem is solved. 
+    This usually involves a 'base case', which is the point in which the problem is solved at.
+    When it reaches the base case, the function will no longer call itself and is able to return out some value or do some operation or do thing.
+
+What are you doing with recursion?
+    In JavaScript: do things like async recursion, call a function that needs to do something, it comes back, then you can call a function that needs to do something, and come back. It is like walking a file tree with async functions. Similar to recursion but not quite recursion.
+
+Often you don't understand it until it clicks and you have an understanding.
+
+The simplest example: 
+    Find the sum of a sequence, from one to N 
+    e.g: sum up to 5 -> foo(5) -> 1 + 2 + 3 + 4 + 5 
+    *without using gauss summation: n(n + 1)/2*
+
+    function foo(n: number) number: {
+        // Base case
+        if (n === 1) {
+            return 1
+        } 
+
+        // We shall recurse!
+        return n + foo(n - 1);
+    }
+
+Three values to help visualize:
+    rA - return address: 
+        Everytime a function is called, it needs to know how it got there. When a function is done, it needs to go back and hand out its value, so it needs to know where that value goes to. 
+    
+    rV - return value:
+        The actual return value. 
+    
+    A - arguments:
+        We pass things into the function, everytime you call the function roughly some memory that is put into your system.
+
+Our function foo
+
+    function foo(n) {
+        if n === 1
+            return 1
+        return n + foo(n - 1);
+    };
+
+We pass in 5 -> foo(5)
+
+    rA  |   rV  |   A
+    -----------------
+    foo5|   5+?  |   5   // returns n + foo (n - 1)
+    foo4|   4+?  |   4   // return points to foo5
+    foo3|   3+?  |   3   // return points to foo4
+    foo2|   2+?  |   2   // return points to foo3
+    foo1|   1    |   1   // we hit our base case, n === 1, return 1, this return points to foo2
+
+Now that we have gone down the stack to find what to add to our rV from our base case,
+Now we must go back up the stack as we return the value from each function foo call.
+
+    rA  |   rV  |   A
+    -----------------
+    foo5|   5+10 |   5  // return of foo4, 10, is added in our return -> 5 + 10
+    foo4|   4+6  |   4  // return of foo3, 6, is added in our return -> 4 + 6
+    foo3|   3+3  |   3  // return of foo2, 3, is added in our return -> 3 + 3
+    foo2|   2+1  |   2  // return of foo1, 1, is added in our return n + foo(n - 1) -> 2 + 1
+    foo1|   1    |   1 
+
+Two Steps for Recursion:
+    1. Base case  -> n === 1
+    2. Recurse    -> return n + foo(n - 1)
+
+    In Summary: Hit base case, stop recursing, undo our function stack, return the value/return address
+
+    The recurse step can be further broken into three steps...
+
+Three steps to recurse:
+    1. Pre - this means you can do something before you recurse, in our foo fn, it is n+  
+    2. Recurse - the calling of the function, in our foo fn, it is foo(n - 1)
+    3. Post - availability for some post operation
+            we dont have to return, we can log or do something else then return, in our fn foo instead of returning sum up to n, it could just return n, which would be 12345
+    We go into the 
+    Pre of adding, then went into foo4, did the pre adding, went into foo3, pre adding -> foo2 -> pre adding -> foo1
+    Then we do the post of console.log n, which is logging out 1, return it back out to 2. did the post log n, logging out 2, return it back to 3. post of log n logging out 4, return it back out to 5.  
+
+This is important to know for pathing.
