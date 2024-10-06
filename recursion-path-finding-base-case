@@ -1,0 +1,82 @@
+Recursion - 
+Path Finding: Base Case
+
+Maze Solver
+We have a list of strings. This list of strings contain some characters.
+    # is a wall, we cannot go through a wall.
+    E is for ending, the way out of the maze.
+    S is the start of the maze
+Our maze:  
+    [
+        "#####E#",
+        "#     #",      
+        "#S#####",
+    ]
+How can we solve this? Going from Start to End? We can't just draw a line and go there on our computer. We can use recursion!
+
+How do we go up? then right a bunch of times then up again?
+What can we do at any one square?
+We can go top, right, bottom, left - 4 directions.
+We are limited in our maze, we have # that may block, or we could go off the graph/maze.
+We can go back to a spot we have seen before, so back and forth between.
+All of these things to consider form our base case.
+
+Base case for our maze:
+    1. its a wall.
+        - if the point we are at in recursion is a wall, it is invalid, we can't be there, it is an invalid state.
+    
+    2. off the map/maze.
+        - if we are at a spot that is not on the map, we have to return.
+    
+    3. its the end.
+    
+    4. if we have seen this tile before.
+        - if we have, we don't want to go in this direction.
+
+Recurse step for our maze:
+    Go in all four directions.
+        - Our recurse step is essentially checking every direction from our current point/position/square.
+      /\    
+     ____
+ <  |____|  > // each arrow/direction is a our recurse step. 
+      
+      \/
+
+// Maze Solver //
+
+// we are passed in a maze, which is a list of strings
+// wall which is a string, the # sign
+// starting point, where our current pointer is
+// end point, point when reached signifies the end.
+// we need to return a list of points from the start to end, representing our movement through the maze. each point in the list is our movement.
+
+Base case requires us to know where we are currently
+Recurse case requires us to able to walk in directions.
+
+function walk(maze: string[], wall: string, curr: Point, end: Point, seen: boolean[][]) boolean {
+    // 1. Base Case
+    // off the map
+    if (curr.x < 0 || curr.x >= maze[0].length ||
+        curr.y < 0 || curr.y >= maze[0].length ) {
+            return false;
+        }
+    // on a wall
+    if (maze[curr.y][curr.x] === wall) {
+            return false;
+        }
+    // its the end
+    if (curr.x === end.x && curr.y === end.y) {
+            return true;
+        }
+    // we have seen the tile before
+    if (seen[curr.y][curr.x]) {
+        return false;
+    }
+}
+
+*in 2D arrays, you traverse the columns first, then the rows.*
+*so curr.x >= maze[0].length is checking if the curr point goes beyond the first column's length and curr.y >= maze[0].length is checking if the curr point goes beyond the first row's length*
+
+export default function solve(maze: string[], wall: string, start: Point, end: Point): Point[] {
+
+}

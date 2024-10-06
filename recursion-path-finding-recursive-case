@@ -1,0 +1,116 @@
+Recursion - 
+Path Finding: Recursive Case
+
+Maze Solver
+We have a list of strings. This list of strings contain some characters.
+    # is a wall, we cannot go through a wall.
+    E is for ending, the way out of the maze.
+    S is the start of the maze
+Our maze:  
+    [
+        "#####E#",
+        "#     #",      
+        "#S#####",
+    ]
+How can we solve this? Going from Start to End? We can't just draw a line and go there on our computer. We can use recursion!
+
+Recurse step for our maze:
+    Go in all four directions.
+        - Our recurse step is essentially checking every direction from our current point/position/square.
+      /\    
+     ____
+ <  |____|  > // each arrow/direction is a our recurse step. 
+      
+      \/
+
+// Maze Solver //
+
+// we are passed in a maze, which is a list of strings
+// wall which is a string, the # sign
+// starting point, where our current pointer is
+// end point, point when reached signifies the end.
+// we need to return a list of points from the start to end, representing our movement through the maze. each point in the list is our movement.
+
+Base case requires us to know where we are currently
+Recurse case requires us to able to walk in directions.
+
+const dir = [
+    [-1, 0], // left
+    [1, 0], // right
+    [0, -1], // down
+    [0, 1], // up
+];
+
+function walk(maze: string[], wall: string, curr: Point, end: Point, seen: boolean[][], path: Point[]) boolean {
+    // 1. Base Case
+    // off the map
+    if (curr.x < 0 || curr.x >= maze[0].length ||
+        curr.y < 0 || curr.y >= maze[0].length ) {
+            return false;
+        }
+    // on a wall
+    if (maze[curr.y][curr.x] === wall) {
+            return false;
+        }
+    // its the end
+    if (curr.x === end.x && curr.y === end.y) {
+            path.push(end);     // we have to add/push our last/ending tile
+            return true;
+        }
+    // we have seen the tile before
+    if (seen[curr.y][curr.x]) {
+        return false;
+    }
+
+    // 3 recurse steps
+    // pre
+    seen[curr.y][curr.x] = true; 
+    path.push(curr);
+    // recurse
+    for (let i = 0; i < dir.length; ++i) {
+        const [x, y] = dir[i]
+        if (walk(maze, wall, {
+            x: curr.x + x,
+            y: curr.y + y,
+        }, end, seen, path)) {
+            return true;    // if walk is successful, meaning we found out end, return true and stop recursing.
+        }
+    }
+    // post
+    path.pop();
+
+    return false;   // if we recurse, reach the end and we did not find our current position, it is false.
+}
+
+Pre and Post are important because we must keep track of our pathing through the maze.
+We hit out dead end, check all of oour directions, realize we can't go, pop off the stack, check all directions, pop off the stack, etc.. this builds our pathing as we walk.
+
+We add a point array -> path: Point[]
+Everytime we successfully visit a spot, we add that in the pre condition then remove it in the post condition.
+  pre      recurse     post
+We push -> recurse -> we pop
+
+
+export default function solve(maze: string[], wall: string, start: Point, end: Point): Point[] {
+    const seen: boolean[][] = [];
+    const path: Point[] = [];
+
+    for (let i = 0; i < maze.length; ++i) {
+        seen.push(new Array(maze[0].length).fill(false));   // our seen matrix with all false values to keep track of where we have been before.
+    }
+
+    walk(maze, wall, start, end, seen, path);
+    
+    return path;
+}
+
+ALWAYS THINK ABOUT YOUR BASE CASE! It is easier when you have a clear defined reason to stop recursing.
+Move as many things as you can into the base case to keep complexity low.
+
+When to use recursion over a for loop?
+ -You have no defined end
+ -Branching factors - our example maze had four directions on the grid, so the branching factor was 4
+
+If you have a clear end, terminuus, a simple for loop is good.
+
+Recursion if done well is extremely simple, if done poorly with base cases within your recursive step, it will be complicated.
