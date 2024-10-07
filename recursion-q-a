@@ -1,0 +1,99 @@
+Q: In our maze, if we have to walk back, does it get mad it's going back on its own path?
+
+A:  In a sense yes, and in a sense no. 
+    If we walk a certain direction in the graph, but at some point we can't keep walking, we have to undo, but we programmed it so we can't go back. What do we do?
+    Say we have two things:
+         
+          path    ->     state
+        [x0][x1]  ->  [true][false]
+    
+    We are at x0, our path is x0.
+    x0 is true, x1 is false. This is our state of the world. 
+    We check up -> can't go up -> returns false
+
+Q: Looking at the test functions,
+
+    test("maze solver", function () {
+    const maze = [
+        "xxxxxxxxxx x",
+        "x        x x",
+        "x        x x",
+        "x xxxxxxxx x",
+        "x          x",
+        "x xxxxxxxxxx",
+    ];
+
+    const mazeResult = [
+        { x: 10, y: 0 },
+        { x: 10, y: 1 },
+        { x: 10, y: 2 },
+        { x: 10, y: 3 },
+        { x: 10, y: 4 },
+        { x: 9, y: 4 },
+        { x: 8, y: 4 },
+        { x: 7, y: 4 },
+        { x: 6, y: 4 },
+        { x: 5, y: 4 },
+        { x: 4, y: 4 },
+        { x: 3, y: 4 },
+        { x: 2, y: 4 },
+        { x: 1, y: 4 },
+        { x: 1, y: 5 },
+    ];
+    How did we get the mazeResult array values?
+    
+A:  Say we are traversing the maze.. 
+     Start path point starts at x0
+     Exit is below us, but we have CSS ordering so top right bottom left
+
+    ##############
+    S[x0][x1][x2]#
+      E ##########
+
+     We first push our current point x0 to the path array.
+        Path array is now [x0]
+        Push seen array [true]
+     Now we recurse from x0  
+     -> check top -> it immediately returns, can't do it/ it is a wall
+     -> check right -> none of the base cases fail
+        Now we can push the path point x1 to the path array, which is now [x0, x1]
+        Path array [x0, x1]
+        Push seen array [true, true]
+     Now we recurse from x1
+     -> check top -> it immediately returns, can't do it/ it is a wall
+     -> check right -> none of the base cases fail
+        Now we can push the path point x2 to the path array, which is now [x0, x1, x2]
+        Path array [x0, x1, x2]
+        Push seen array [true, true, true]
+     Now we recurse from x2
+     -> check top -> it immediately returns -> check right -> immediately returns -> bottom -> returns
+     -> only path without a wall is true in the seen array -> so it fails,  cant go there either
+    
+    Now the whole function returns. 
+    The whole function returns a false, 
+    but before returning it pops from the stack
+    Now the next function runs and finds only walls, so it pops off the stack
+    Then returns to the next function
+    Now the next function runs and finds only walls, so it pops off the stack
+    Hit the last recurse at x0, where it finds the bottom is not in a wall and not in the seen array
+    We built this array as we walked.
+
+
+Q: Is there any scenario where the order would make any performance difference suchas going top right bottom left?
+
+A:  There is no difference in the general case.
+    If we could inspect or look at, then we could automically guess differently, say we checked down first we would effectively walk straight to the exit. 
+    But in the general sense and case, we don't see the maze or graph ahead of time
+    You can't usually see the direction that would make the most sense everytime.
+    If we did know the graph or maze ahead of time we could more easily optimize the shortest path.
+
+Q: What is the big O of this?
+
+A:  Linear O(N).
+
+    We can think of this in a different sense. 
+    Say we solve for a specific square
+    It has four possible entrances into the square
+    Potential to come from top, right, bottom, left
+    At most/worst case we check every single square 4 times.
+    Notation is O(4S) - > drop constants ->  O(S) -> O(N)
